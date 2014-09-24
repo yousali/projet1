@@ -21,6 +21,8 @@ public class Projet1 {
         System.out.println("Premiere modification du projet.");
         System.out.println("Modification faite dans le repertoire clone");
         System.out.println("Ligne du premier projet");
+        System.out.println("Ajout d,une ligne au porjet clone.");
+
     }
     
 }
