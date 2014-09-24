@@ -18,6 +18,7 @@ public class Projet1 {
         // TODO code application logic here
         
         System.out.println("Bonjour tout le monde.");
+        System.out.println("Premiere modification du prjet.");
     }
     
 }
