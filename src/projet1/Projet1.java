@@ -19,6 +19,7 @@ public class Projet1 {
         
         System.out.println("Bonjour tout le monde.");
         System.out.println("Premiere modification du projet.");
+        System.out.println("Modification faite dans le repertoire clone");
     }
     
 }
