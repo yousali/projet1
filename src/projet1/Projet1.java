@@ -126,11 +126,6 @@ public class Projet1 {
     }
 
     private static boolean validerCycle(String cycle) {
-        Boolean leCycleEstValide = false;
-        if (cycle.equals("2012-2014")) {
-            leCycleEstValide = true;
-        } else {
-        }
-        return leCycleEstValide;
+        return (cycle.equals("2012-2014"));
     }
 }
