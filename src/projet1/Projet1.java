@@ -94,8 +94,8 @@ public class Projet1 {
             if (nbreHeuresProjetDeRecherche > 23) {
                 nbreHeuresProjetDeRecherche = 23;
             }
-            if (nbreHeuresProjetDeRecherche > 17) {
-                nbreHeuresProjetDeRecherche = 17;
+            if (nbreHeuresRedaction > 17) {
+                nbreHeuresRedaction = 17;
             }
             int nbreTotalHeures = heuresTransfereesCylePrecedent + nbreHeuresRedaction + nbreHeuresCours + nbreHeuresGroupeDeDiscussion + nbreHeuresPresentation + nbreHeuresProjetDeRecherche;
             if ((nbreTotalHeures) < 40) {
@@ -103,7 +103,6 @@ public class Projet1 {
                 erreurs.add("Il manque " + (40 - nbreTotalHeures) + " heure(s) de formation pour completer le cycle.");
             }
         }
-
         JSONObject contenuRetourne = new JSONObject();
         contenuRetourne.put("Complet", declarationValide);
         JSONArray listeDesErreurs = new JSONArray();
