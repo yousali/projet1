@@ -24,8 +24,9 @@ public class Projet1 {
         Integer nbreHeuresRedaction = 0;
         String fichier = FileReader.loadFileIntoString(fichierDeclaration, null);
         JSONObject contenu = (JSONObject) JSONSerializer.toJSON(fichier);
+        String ordre = contenu.getString("ordre").trim().toLowerCase();
         String cycle = contenu.getString("cycle").trim();
-        if (!validerCycle(cycle)) {
+        if (!validerCycle(cycle,ordre)) {
             erreurs.add("Le cyle entré n'est pas supporte");
             declarationValide = false;
         } else {
@@ -124,7 +125,25 @@ public class Projet1 {
         return date.compareTo(date1) > 0 && date.compareTo(date2) < 0;
     }
 
-    private static boolean validerCycle(String cycle) {
-        return (cycle.equals("2012-2014"));
+    private static boolean validerCycle(String cycle, String ordre) {
+        
+        switch (ordre){
+            
+            case "architectes":
+                return (cycle.equals("2010-2012") || cycle.equals("2008-2010")|| cycle.equals("2012-2014"));
+            
+            case "geologues":
+                
+                return (cycle.equals("2013-2016"));
+                
+            case "psychologues":
+                
+                return (cycle.equals("2010-2015"));
+            default:
+                
+                return false;
+        }
+        
+       
     }
 }
