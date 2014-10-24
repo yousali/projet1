@@ -15,12 +15,14 @@ public class Projet1 {
     public static void main(String[] args) throws Exception {
         Boolean declarationValide = true;
         ArrayList<String> erreurs = new ArrayList<>();
-        ArrayList<String> activitesTraitees = new ArrayList<>();
+       /* ArrayList<String> activitesTraitees = new ArrayList<>();
         Integer nbreHeuresCours = 0;
         Integer nbreHeuresPresentation = 0;
         Integer nbreHeuresGroupeDeDiscussion = 0;
         Integer nbreHeuresProjetDeRecherche = 0;
-        Integer nbreHeuresRedaction = 0;
+        Integer nbreHeuresRedaction = 0; */
+        
+       
 
         String fichier = FileReader.loadFileIntoString(args[0], null);
         JSONObject contenu = (JSONObject) JSONSerializer.toJSON(fichier);
@@ -30,18 +32,19 @@ public class Projet1 {
 
             switch (ordre) {
 
-                case "architecte":
-
+                case "architectes":
+                    System.out.println("Architectes");
                     ValidationArchitectes.traiter(contenu);
-
+                    break;
                 case "geologues":
                     ValidationGeologues.traiter();
-
+                    break;
                 case "psychologues":
 
                     ValidationPsychologues.traiter();
-
+                    break;
                 default:
+                    System.out.println("L,ordre n,est pas accepte");
                     erreurs.add("L'ordre n'est pas supporte.");
                     declarationValide = false;
 

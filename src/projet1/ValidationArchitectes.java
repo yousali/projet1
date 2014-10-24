@@ -12,13 +12,8 @@ import java.util.Date;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
-/**
- *
- * @author Moes
- */
 public class ValidationArchitectes {
 
-   
     //-------------------------
     static ArrayList<String> activitesTraitees = new ArrayList<>();
     static Integer nbreHeuresRequises;
@@ -39,23 +34,70 @@ public class ValidationArchitectes {
                 nbreHeuresRequises = heuresMinimalesFormation(cycle);
                 nbreHeuresCyclePrecedent = transfertHeuresCyclePrecedent(contenu.getInt("heures_transferees_du_cycle_precedent"));
                 JSONArray activitesFaites = (JSONArray) contenu.getJSONArray("activites");
-                for( int i = 0; i < activitesFaites.size();i++){
+                for (int i = 0; i < activitesFaites.size(); i++) {
                     JSONObject activiteSuivie = activitesFaites.getJSONObject(i);
                     String descriptionActivite = activiteSuivie.getString("description").trim().toLowerCase();
-                    if(ValidationsCommunes.descriptionActiviteValide()){
+                    if (ValidationsCommunes.descriptionActiviteValide(descriptionActivite)) {
                         String dateActivite = activiteSuivie.getString("date").trim();
                         try {
                             Date date = new SimpleDateFormat("yyyy-MM-dd").parse(dateActivite);
-                        }catch(ParseException e){
-                          ValidationsCommunes.erreurFormatDate();
+                            if (!activiteSuivieDurantLeCycle(date, cycle)) {
+                                ValidationsCommunes.erreurs.add("L'activité " + descriptionActivite
+                                        + " n'a pas ete complétée au bon moment.");
+                            } else {
+                                String categorieActivite = activiteSuivie.getString("categorie").trim().toLowerCase();
+                                String activite = categorieActivite + " " + descriptionActivite + " " + dateActivite;
+                                if (activitesTraitees.indexOf(activite) == -1) {
+                                    activitesTraitees.add(activite);
+                                    int nbreHeuresActivite = activiteSuivie.getInt("heures");
+                                    if (nbreHeuresActivite > 0) {
+                                        switch (categorieActivite) {
+                                            case "cours":
+                                            case "atelier":
+                                            case "séminaire":
+                                            case "colloque":
+                                            case "conférence":
+                                            case "lecture dirigée":
+                                                nbreHeuresCours = nbreHeuresCours
+                                                        + nbreHeuresActivite;
+                                                break;
+                                            case "présentation":
+                                                nbreHeuresPresentation = nbreHeuresPresentation + nbreHeuresActivite;
+                                                break;
+                                            case "groupe de discussion":
+                                                nbreHeuresGroupeDeDiscussion = nbreHeuresGroupeDeDiscussion + nbreHeuresActivite;
+                                                break;
+                                            case "projet de recherche":
+                                                nbreHeuresProjetDeRecherche = nbreHeuresProjetDeRecherche + nbreHeuresActivite;
+                                                break;
+                                            case "rédaction professionnelle":
+                                                nbreHeuresRedaction = nbreHeuresRedaction + nbreHeuresActivite;
+                                                break;
+                                            default:
+                                                ValidationsCommunes.erreurs.add("La catégorie " + categorieActivite + " n'est pas reconnue.");
+                                        }
+
+                                    }
+                                }
+
+                            }
+
+                        } catch (ParseException e) {
+                            ValidationsCommunes.erreurFormatDate();
+                            break;
                         }
-                        
-                    }else{
-                        
+
+                    } else {
+
                         ValidationsCommunes.erreurDescriptionActivite();
-                         
+
                     }
                 }
+                
+                calculDesHeures();
+                
+                System.out.println(ValidationsCommunes.declarationValide);
+                System.out.println(ValidationsCommunes.erreurs);
 
             } else {
                 erreurDeCycle();
@@ -65,61 +107,8 @@ public class ValidationArchitectes {
         }
 
     }
-    
-    
-    /**
-         * 
-         * 
-         * 
-         * 
-         *
-         * for
-         * (int i = 0; i < activitesFaites.size(); i++) {
-         * JSONObject activiteSuivie = activitesFaites.getJSONObject(i);
-         * String descriptionActivite = activiteSuivie.getString("description").trim().toLowerCase();
-         * String dateActivite = activiteSuivie.getString("date").trim();
-         * Date date = new SimpleDateFormat("yyyy-MM-dd").parse(dateActivite);
-         * if (!ValidationArchitectes.activiteSuivieDurantLeCycle(date, "2012-2014")) {
-         * erreurs.add("L'activité " + descriptionActivite + " n'a pas ete complétée"
-         * + " entre le 1er Avril 2012 et le 1er Avril 2014.");
-         * } else {
-         * String categorieActivite = activiteSuivie.getString("categorie").trim().toLowerCase();
-         * String activite = categorieActivite + " " + descriptionActivite + " " + dateActivite;
-         * if (activitesTraitees.indexOf(activite) == -1) {
-         * activitesTraitees.add(activite);
-         * int nbreHeuresActivite = activiteSuivie.getInt("heures");
-         * if (nbreHeuresActivite > 0) { switch (categorieActivite) { case
-         * "cours": case "atelier": case "séminaire": case "colloque": case
-         * "conférence": case "lecture dirigée": nbreHeuresCours =
-         * nbreHeuresCours + nbreHeuresActivite; break; case "présentation":
-         * nbreHeuresPresentation = nbreHeuresPresentation + nbreHeuresActivite;
-         * break; case "groupe de discussion": nbreHeuresGroupeDeDiscussion =
-         * nbreHeuresGroupeDeDiscussion + nbreHeuresActivite; break; case
-         * "projet de recherche": nbreHeuresProjetDeRecherche =
-         * nbreHeuresProjetDeRecherche + nbreHeuresActivite; break; case
-         * "rédaction professionnelle": nbreHeuresRedaction =
-         * nbreHeuresRedaction + nbreHeuresActivite; break; default:
-         * erreurs.add("La catégorie " + categorieActivite + " n'est pas
-         * reconnue."); } } } } } if ((nbreHeuresCours +
-         * heuresTransfereesCylePrecedent) < 17) {
-         * declarationValide = false;
-         * erreurs.add("Le minimum de 17 heures n'a pas été atteint dans les catégories cours,atelier,"
-         * + "séminaire,colloque ,conférence et lecture dirigée.");
-         * }
-         * if (nbreHeuresPresentation > 23) { nbreHeuresPresentation = 23; } if
-         * (nbreHeuresGroupeDeDiscussion > 17) { nbreHeuresGroupeDeDiscussion =
-         * 17; } if (nbreHeuresProjetDeRecherche > 23) {
-         * nbreHeuresProjetDeRecherche = 23; } if (nbreHeuresRedaction > 17) {
-         * nbreHeuresRedaction = 17; } int nbreTotalHeures =
-         * heuresTransfereesCylePrecedent + nbreHeuresRedaction +
-         * nbreHeuresCours + nbreHeuresGroupeDeDiscussion +
-         * nbreHeuresPresentation + nbreHeuresProjetDeRecherche; if
-         * ((nbreTotalHeures) < 40) {
-         * declarationValide = false;
-         * erreurs.add("Il manque " + (40 - nbreTotalHeures) + " heure(s) de formation pour completer le cycle.");
-         * }
-         * } */
 
+    
     static int transfertHeuresCyclePrecedent(Integer nbreHeures) {
         Integer nbreHeuresATransferer = nbreHeures;
         if (nbreHeures < 0) {
@@ -133,7 +122,7 @@ public class ValidationArchitectes {
     }
 
     static void erreurDePermis() {
-        System.out.println("Erreur, le numero de permisest invalide");
+        System.out.println("Erreur, le numero de permis est invalide");
         ValidationsCommunes.declarationValide = false;
         ValidationsCommunes.erreurs.add("Le fichier d'entree est invalide.");
     }
@@ -167,7 +156,7 @@ public class ValidationArchitectes {
     }
 
     static void erreurDeCycle() {
-
+        System.out.println("Erreur du cycle");
         ValidationsCommunes.erreurs.add("Le cycle entre n'est pas supporte.");
         ValidationsCommunes.declarationValide = false;
     }
@@ -177,4 +166,35 @@ public class ValidationArchitectes {
         return (cycle.equals("2010-2012") || cycle.equals("2008-2010") || cycle.equals("2012-2014"));
     }
 
+    static void calculDesHeures() {
+        if ((nbreHeuresCours + nbreHeuresCyclePrecedent) < 17) {
+            ValidationsCommunes.declarationValide = false;
+            ValidationsCommunes.erreurs.add("Le minimum de 17 heures n'a pas été atteint dans "
+                    + "les catégories cours,atelier,séminaire,colloque ,conférence et lecture dirigée.");
+        }
+        if (nbreHeuresPresentation > 23) {
+            nbreHeuresPresentation = 23;
+        }
+        if (nbreHeuresGroupeDeDiscussion > 17) {
+            nbreHeuresGroupeDeDiscussion = 17;
+        }
+        if (nbreHeuresProjetDeRecherche > 23) {
+            nbreHeuresProjetDeRecherche
+                    = 23;
+        }
+        if (nbreHeuresRedaction > 17) {
+            nbreHeuresRedaction = 17;
+        }
+        int nbreTotalHeures = nbreHeuresCyclePrecedent + nbreHeuresRedaction
+                + nbreHeuresCours + nbreHeuresGroupeDeDiscussion + nbreHeuresPresentation
+                + nbreHeuresProjetDeRecherche;
+        if ((nbreTotalHeures) < nbreHeuresRequises) {
+            ValidationsCommunes.declarationValide = false;
+            ValidationsCommunes.erreurs.add("Il manque " + (nbreHeuresRequises - nbreTotalHeures) + 
+                    " heure(s) de formation pour completer le cycle.");
+        }
+
+    }
 }
+
+    

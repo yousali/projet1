@@ -20,7 +20,7 @@ public class ValidationsCommunes {
        
        return true;
    }
-   static boolean descriptionActiviteValide(){//A completer
+   static boolean descriptionActiviteValide(String description){//A completer
        
        return true;
    }
