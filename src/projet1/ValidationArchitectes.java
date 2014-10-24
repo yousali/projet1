@@ -43,7 +43,7 @@ public class ValidationArchitectes {
                             Date date = new SimpleDateFormat("yyyy-MM-dd").parse(dateActivite);
                             if (!activiteSuivieDurantLeCycle(date, cycle)) {
                                 ValidationsCommunes.erreurs.add("L'activité " + descriptionActivite
-                                        + " n'a pas ete complétée au bon moment.");
+                                        + erreurCompletionActivite(cycle));
                             } else {
                                 String categorieActivite = activiteSuivie.getString("categorie").trim().toLowerCase();
                                 String activite = categorieActivite + " " + descriptionActivite + " " + dateActivite;
@@ -58,8 +58,7 @@ public class ValidationArchitectes {
                                             case "colloque":
                                             case "conférence":
                                             case "lecture dirigée":
-                                                nbreHeuresCours = nbreHeuresCours
-                                                        + nbreHeuresActivite;
+                                                nbreHeuresCours = nbreHeuresCours + nbreHeuresActivite;
                                                 break;
                                             case "présentation":
                                                 nbreHeuresPresentation = nbreHeuresPresentation + nbreHeuresActivite;
@@ -107,6 +106,15 @@ public class ValidationArchitectes {
         }
 
     }
+    
+    static String erreurCompletionActivite(String cycle){
+        if(cycle.equals("2008-2010")){
+            return "n'a pas ete complete entre le 1er Avril 2008 et le 1er Juillet 2010.";
+        }else if(cycle.equals("2010-2012")){
+            return " n'a pas ete completee entre le 1er Avril 2010 et le 1er Avril 2012.";
+        }
+        return "n'a pas ete complete entre le 1er Avril 2012 et le 1er Avril 2014.";   
+    }
 
     
     static int transfertHeuresCyclePrecedent(Integer nbreHeures) {
@@ -143,12 +151,12 @@ public class ValidationArchitectes {
 
         switch (cycle) {
 
-            case "2018-2010":
-                return (date.compareTo(date1) >= 0 && date.compareTo(date3) <= 0);
+            case "2008-2010":
+                return date.compareTo(date1) >= 0 && date.compareTo(date3) <= 0;
             case "2010-2012":
-                return (date.compareTo(date2) >= 0 && date.compareTo(date4) <= 0);
+                return date.compareTo(date2) >= 0 && date.compareTo(date4) <= 0;
             case "2012-2014":
-                return (date.compareTo(date4) >= 0 && date.compareTo(date5) <= 0);
+                return date.compareTo(date4) >= 0 && date.compareTo(date5) <= 0;
             default:
                 return false;
         }
