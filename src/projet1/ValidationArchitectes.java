@@ -123,7 +123,7 @@ public class ValidationArchitectes {
             nbreHeuresATransferer = 0;
         } else if (nbreHeures > 7) {
             nbreHeuresATransferer = 7;
-            ValidationsCommunes.erreurs.add("Le nombre d'heures transferées du cycle precedent est ramené a 7.");
+            ValidationsCommunes.erreurs.add("Le nombre d'heures transferées du cycle precedent est ramené a 7");
         }
 
         return nbreHeuresATransferer;
