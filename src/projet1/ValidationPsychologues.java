@@ -5,10 +5,7 @@
  */
 package projet1;
 
-/**
- *
- * @author Moes
- */
+
 public class ValidationPsychologues {
     
     static void traiter(){

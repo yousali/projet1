@@ -8,7 +8,7 @@ import net.sf.json.JSONObject;
 
 public class ValidationsCommunes {
 
-    static boolean declarationValide = false;
+    static boolean declarationValide = true;
     static ArrayList<String> erreurs = new ArrayList<>();
 
     static boolean permisValide(String permis) {//A completer
@@ -16,14 +16,14 @@ public class ValidationsCommunes {
         return true;
     }
 
-    static boolean ordreSupporte(String ordre) {
+   /* static boolean ordreSupporte(String ordre) {
 
         return (ordre.equals("architectes") || ordre.equals("géologues") || ordre.equals("psycologues"));
-    }
+    } */
 
     static boolean noPermisValide(String noPermis) {
-
-        return true;
+        
+       return noPermis.matches("[ARSZ][0-9]{4}");   
     }
 
     static boolean descriptionActiviteValide(String description) {//A completer
@@ -46,9 +46,16 @@ public class ValidationsCommunes {
         declarationValide = false;
 
     }
+    
+    static void erreurInteger(){
+        
+        System.out.println("Erreur! Les heures d'activite devraient etre des entiers positifs");
+        ArrayList<String> erreurInteger = new ArrayList<>();
+        erreurInteger.add("Erreur! Les heures d'activite devraient etre des entiers positifs");
+        ValidationsCommunes.erreurs = erreurInteger;
+    }
 
     static void ecrireFichierSortie(String nomFichier) {
-
         JSONObject contenuRetourne = new JSONObject();
         contenuRetourne.put("Complet", declarationValide);
         JSONArray listeDesErreurs = new JSONArray();
@@ -56,7 +63,6 @@ public class ValidationsCommunes {
             listeDesErreurs.add(erreur);
         });
         contenuRetourne.put("erreurs", listeDesErreurs);
-
         try (FileWriter fichierDeSortie = new FileWriter(nomFichier)) {
             contenuRetourne.write(fichierDeSortie);
         } catch (IOException e) {

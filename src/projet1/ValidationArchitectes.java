@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import net.sf.json.JSONArray;
+import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
 
 public class ValidationArchitectes {
@@ -51,7 +52,54 @@ public class ValidationArchitectes {
                                     activitesTraitees.add(activite);
                                     int nbreHeuresActivite = activiteSuivie.getInt("heures");
                                     if (nbreHeuresActivite > 0) {
-                                        switch (categorieActivite) {
+                                        ajoutActivite(categorieActivite,nbreHeuresActivite);
+                                    }else{
+                                        ValidationsCommunes.erreurInteger();
+                                        break;
+                                    }
+                                    
+                                }
+
+                            }
+
+                        } catch (ParseException e) {
+                            ValidationsCommunes.erreurFormatDate();
+                            break;
+                        }catch (JSONException e){
+                            
+                            ValidationsCommunes.erreurInteger();
+                            break;
+                        }catch (NumberFormatException e){
+                            
+                             ValidationsCommunes.erreurInteger();
+                            break;
+                        }
+                        
+                        
+
+                    } else {
+
+                        ValidationsCommunes.erreurDescriptionActivite();
+
+                    }
+                }
+                
+                calculDesHeures();
+                
+                System.out.println(ValidationsCommunes.declarationValide);
+                System.out.println(ValidationsCommunes.erreurs);
+
+            } else {
+                erreurDeCycle();
+            }
+        } else {
+            erreurDePermis();
+        }
+
+    }
+    
+    static void ajoutActivite(String categorieActivite, Integer nbreHeuresActivite){
+         switch (categorieActivite) {
                                             case "cours":
                                             case "atelier":
                                             case "séminaire":
@@ -75,36 +123,8 @@ public class ValidationArchitectes {
                                             default:
                                                 ValidationsCommunes.erreurs.add("La catégorie " + categorieActivite + " n'est pas reconnue.");
                                         }
-
-                                    }
-                                }
-
-                            }
-
-                        } catch (ParseException e) {
-                            ValidationsCommunes.erreurFormatDate();
-                            break;
-                        }
-
-                    } else {
-
-                        ValidationsCommunes.erreurDescriptionActivite();
-
-                    }
-                }
-                
-                calculDesHeures();
-                
-                System.out.println(ValidationsCommunes.declarationValide);
-                System.out.println(ValidationsCommunes.erreurs);
-
-            } else {
-                erreurDeCycle();
-            }
-        } else {
-            erreurDePermis();
-        }
-
+        
+        
     }
     
     static String erreurCompletionActivite(String cycle){
