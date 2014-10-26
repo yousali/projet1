@@ -1,1 +1,1 @@
-{"Complet":false,"erreurs":["Le nombre d'heures transferées du cycle precedent est ramené a 7","Une description de plus de 20 caracteres devrait etre donnee pour chaque activite faite."]}
+{"Complet":false,"erreurs":["Erreur! Les heures d'activité devraient etre des entiers positifs"]}

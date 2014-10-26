@@ -29,7 +29,7 @@ public class ValidationArchitectes {
     static void traiter(JSONObject contenu) {
 
         String noPermis = contenu.getString("numero_de_permis");
-        if (ValidationsCommunes.noPermisValide(noPermis)) {
+        if (Projet1.noPermisValide(noPermis)) {
             String cycle = contenu.getString("cycle").trim();
             if (cycleValide(cycle)) {
                 nbreHeuresRequises = heuresMinimalesFormation(cycle);
@@ -38,12 +38,12 @@ public class ValidationArchitectes {
                 for (int i = 0; i < activitesFaites.size(); i++) {
                     JSONObject activiteSuivie = activitesFaites.getJSONObject(i);
                     String descriptionActivite = activiteSuivie.getString("description").trim().toLowerCase();
-                    if (ValidationsCommunes.descriptionActiviteValide(descriptionActivite)) {
+                    if (Projet1.descriptionActiviteValide(descriptionActivite)) {
                         String dateActivite = activiteSuivie.getString("date").trim();
                         try {
                             Date date = new SimpleDateFormat("yyyy-MM-dd").parse(dateActivite);
                             if (!activiteSuivieDurantLeCycle(date, cycle)) {
-                                ValidationsCommunes.erreurs.add("L'activité " + descriptionActivite
+                                Projet1.erreurs.add("L'activité " + descriptionActivite
                                         + erreurCompletionActivite(cycle));
                             } else {
                                 String categorieActivite = activiteSuivie.getString("categorie").trim().toLowerCase();
@@ -54,8 +54,8 @@ public class ValidationArchitectes {
                                     if (nbreHeuresActivite > 0) {
                                         ajoutActivite(categorieActivite,nbreHeuresActivite);
                                     }else{
-                                        ValidationsCommunes.erreurInteger();
-                                        break;
+                                        Projet1.erreurInteger();
+                                        return;
                                     }
                                     
                                 }
@@ -63,15 +63,15 @@ public class ValidationArchitectes {
                             }
 
                         } catch (ParseException e) {
-                            ValidationsCommunes.erreurFormatDate();
+                            Projet1.erreurFormatDate();
                             break;
                         }catch (JSONException e){
                             
-                            ValidationsCommunes.erreurInteger();
+                            Projet1.erreurInteger();
                             break;
                         }catch (NumberFormatException e){
                             
-                             ValidationsCommunes.erreurInteger();
+                             Projet1.erreurInteger();
                             break;
                         }
                         
@@ -79,15 +79,15 @@ public class ValidationArchitectes {
 
                     } else {
 
-                        ValidationsCommunes.erreurDescriptionActivite();
+                        Projet1.erreurDescriptionActivite();
 
                     }
                 }
                 
                 calculDesHeures();
-                
-                System.out.println(ValidationsCommunes.declarationValide);
-                System.out.println(ValidationsCommunes.erreurs);
+               //***A effacer lesdeux lignes qui suivent 
+                System.out.println(Projet1.declarationValide);
+                System.out.println(Projet1.erreurs);
 
             } else {
                 erreurDeCycle();
@@ -121,7 +121,7 @@ public class ValidationArchitectes {
                                                 nbreHeuresRedaction = nbreHeuresRedaction + nbreHeuresActivite;
                                                 break;
                                             default:
-                                                ValidationsCommunes.erreurs.add("La catégorie " + categorieActivite + " n'est pas reconnue.");
+                                                Projet1.erreurs.add("La catégorie " + categorieActivite + " n'est pas reconnue.");
                                         }
         
         
@@ -143,7 +143,7 @@ public class ValidationArchitectes {
             nbreHeuresATransferer = 0;
         } else if (nbreHeures > 7) {
             nbreHeuresATransferer = 7;
-            ValidationsCommunes.erreurs.add("Le nombre d'heures transferées du cycle precedent est ramené a 7");
+            Projet1.erreurs.add("Le nombre d'heures transferées du cycle precedent est ramené a 7");
         }
 
         return nbreHeuresATransferer;
@@ -151,8 +151,8 @@ public class ValidationArchitectes {
 
     static void erreurDePermis() {
         System.out.println("Erreur, le numero de permis est invalide");
-        ValidationsCommunes.declarationValide = false;
-        ValidationsCommunes.erreurs.add("Le fichier d'entree est invalide.");
+        Projet1.declarationValide = false;
+        Projet1.erreurs.add("Le fichier d'entree est invalide.");
     }
 
     static Integer heuresMinimalesFormation(String cycle) {
@@ -185,8 +185,8 @@ public class ValidationArchitectes {
 
     static void erreurDeCycle() {
         System.out.println("Erreur du cycle");
-        ValidationsCommunes.erreurs.add("Le cycle entre n'est pas supporte.");
-        ValidationsCommunes.declarationValide = false;
+        Projet1.erreurs.add("Le cycle entre n'est pas supporte.");
+        Projet1.declarationValide = false;
     }
 
     static boolean cycleValide(String cycle) {
@@ -196,8 +196,8 @@ public class ValidationArchitectes {
 
     static void calculDesHeures() {
         if ((nbreHeuresCours + nbreHeuresCyclePrecedent) < 17) {
-            ValidationsCommunes.declarationValide = false;
-            ValidationsCommunes.erreurs.add("Le minimum de 17 heures n'a pas été atteint dans "
+            Projet1.declarationValide = false;
+            Projet1.erreurs.add("Le minimum de 17 heures n'a pas été atteint dans "
                     + "les catégories cours,atelier,séminaire,colloque ,conférence et lecture dirigée.");
         }
         if (nbreHeuresPresentation > 23) {
@@ -217,8 +217,8 @@ public class ValidationArchitectes {
                 + nbreHeuresCours + nbreHeuresGroupeDeDiscussion + nbreHeuresPresentation
                 + nbreHeuresProjetDeRecherche;
         if ((nbreTotalHeures) < nbreHeuresRequises) {
-            ValidationsCommunes.declarationValide = false;
-            ValidationsCommunes.erreurs.add("Il manque " + (nbreHeuresRequises - nbreTotalHeures) + 
+            Projet1.declarationValide = false;
+            Projet1.erreurs.add("Il manque " + (nbreHeuresRequises - nbreTotalHeures) + 
                     " heure(s) de formation pour completer le cycle.");
         }
 
