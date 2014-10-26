@@ -11,24 +11,14 @@ public class ValidationsCommunes {
     static boolean declarationValide = true;
     static ArrayList<String> erreurs = new ArrayList<>();
 
-    static boolean permisValide(String permis) {//A completer
-
-        return true;
-    }
-
-   /* static boolean ordreSupporte(String ordre) {
-
-        return (ordre.equals("architectes") || ordre.equals("géologues") || ordre.equals("psycologues"));
-    } */
-
     static boolean noPermisValide(String noPermis) {
         
        return noPermis.matches("[ARSZ][0-9]{4}");   
     }
 
-    static boolean descriptionActiviteValide(String description) {//A completer
+    static boolean descriptionActiviteValide(String description) {
 
-        return true;
+        return (description.length() > 20);
     }
 
     static void erreurDescriptionActivite() {
