@@ -12,6 +12,7 @@ import java.util.Date;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
+import static sun.util.calendar.CalendarUtils.mod;
 
 public class ValidationArchitectes {
 
@@ -40,42 +41,46 @@ public class ValidationArchitectes {
                     String descriptionActivite = activiteSuivie.getString("description").trim().toLowerCase();
                     if (Projet1.descriptionActiviteValide(descriptionActivite)) {
                         String dateActivite = activiteSuivie.getString("date").trim();
-                        try {
-                            Date date = new SimpleDateFormat("yyyy-MM-dd").parse(dateActivite);
-                            if (!activiteSuivieDurantLeCycle(date, cycle)) {
-                                Projet1.erreurs.add("L'activité " + descriptionActivite
-                                        + erreurCompletionActivite(cycle));
-                            } else {
-                                String categorieActivite = activiteSuivie.getString("categorie").trim().toLowerCase();
-                                String activite = categorieActivite + " " + descriptionActivite + " " + dateActivite;
-                                if (activitesTraitees.indexOf(activite) == -1) {
-                                    activitesTraitees.add(activite);
-                                    int nbreHeuresActivite = activiteSuivie.getInt("heures");
-                                    if (nbreHeuresActivite > 0) {
-                                        ajoutActivite(categorieActivite,nbreHeuresActivite);
-                                    }else{
-                                        Projet1.erreurInteger();
-                                        return;
+                        if (Projet1.dateValide(dateActivite)) {
+                            try {
+                                Date date = new SimpleDateFormat("yyyy-MM-dd").parse(dateActivite);
+                                if (!activiteSuivieDurantLeCycle(date, cycle)) {
+                                    Projet1.erreurs.add("L'activité " + descriptionActivite
+                                            + erreurCompletionActivite(cycle));
+                                } else {
+                                    String categorieActivite = activiteSuivie.getString("categorie").trim().toLowerCase();
+                                    String activite = categorieActivite + " " + descriptionActivite + " " + dateActivite;
+                                    if (activitesTraitees.indexOf(activite) == -1) {
+                                        activitesTraitees.add(activite);
+                                        int nbreHeuresActivite = activiteSuivie.getInt("heures");
+                                        if (nbreHeuresActivite > 0) {
+                                            ajoutActivite(categorieActivite, nbreHeuresActivite);
+                                        } else {
+                                            Projet1.erreurInteger();
+                                            return;
+                                        }
+
                                     }
-                                    
+
                                 }
 
-                            }
+                            } catch (ParseException e) {
+                                Projet1.erreurFormatDate();
+                                break;
+                            } catch (JSONException e) {
 
-                        } catch (ParseException e) {
+                                Projet1.erreurInteger();
+                                break;
+                            } catch (NumberFormatException e) {
+
+                                Projet1.erreurInteger();
+                                return;
+                            }
+                        } else {
+
                             Projet1.erreurFormatDate();
-                            break;
-                        }catch (JSONException e){
-                            
-                            Projet1.erreurInteger();
-                            break;
-                        }catch (NumberFormatException e){
-                            
-                             Projet1.erreurInteger();
-                            break;
+                            return;
                         }
-                        
-                        
 
                     } else {
 
@@ -83,9 +88,9 @@ public class ValidationArchitectes {
 
                     }
                 }
-                
+
                 calculDesHeures();
-               //***A effacer lesdeux lignes qui suivent 
+                //***A effacer lesdeux lignes qui suivent 
                 System.out.println(Projet1.declarationValide);
                 System.out.println(Projet1.erreurs);
 
@@ -97,46 +102,44 @@ public class ValidationArchitectes {
         }
 
     }
-    
-    static void ajoutActivite(String categorieActivite, Integer nbreHeuresActivite){
-         switch (categorieActivite) {
-                                            case "cours":
-                                            case "atelier":
-                                            case "séminaire":
-                                            case "colloque":
-                                            case "conférence":
-                                            case "lecture dirigée":
-                                                nbreHeuresCours = nbreHeuresCours + nbreHeuresActivite;
-                                                break;
-                                            case "présentation":
-                                                nbreHeuresPresentation = nbreHeuresPresentation + nbreHeuresActivite;
-                                                break;
-                                            case "groupe de discussion":
-                                                nbreHeuresGroupeDeDiscussion = nbreHeuresGroupeDeDiscussion + nbreHeuresActivite;
-                                                break;
-                                            case "projet de recherche":
-                                                nbreHeuresProjetDeRecherche = nbreHeuresProjetDeRecherche + nbreHeuresActivite;
-                                                break;
-                                            case "rédaction professionnelle":
-                                                nbreHeuresRedaction = nbreHeuresRedaction + nbreHeuresActivite;
-                                                break;
-                                            default:
-                                                Projet1.erreurs.add("La catégorie " + categorieActivite + " n'est pas reconnue.");
-                                        }
-        
-        
-    }
-    
-    static String erreurCompletionActivite(String cycle){
-        if(cycle.equals("2008-2010")){
-            return "n'a pas ete complete entre le 1er Avril 2008 et le 1er Juillet 2010.";
-        }else if(cycle.equals("2010-2012")){
-            return " n'a pas ete completee entre le 1er Avril 2010 et le 1er Avril 2012.";
+
+    static void ajoutActivite(String categorieActivite, Integer nbreHeuresActivite) {
+        switch (categorieActivite) {
+            case "cours":
+            case "atelier":
+            case "séminaire":
+            case "colloque":
+            case "conférence":
+            case "lecture dirigée":
+                nbreHeuresCours = nbreHeuresCours + nbreHeuresActivite;
+                break;
+            case "présentation":
+                nbreHeuresPresentation = nbreHeuresPresentation + nbreHeuresActivite;
+                break;
+            case "groupe de discussion":
+                nbreHeuresGroupeDeDiscussion = nbreHeuresGroupeDeDiscussion + nbreHeuresActivite;
+                break;
+            case "projet de recherche":
+                nbreHeuresProjetDeRecherche = nbreHeuresProjetDeRecherche + nbreHeuresActivite;
+                break;
+            case "rédaction professionnelle":
+                nbreHeuresRedaction = nbreHeuresRedaction + nbreHeuresActivite;
+                break;
+            default:
+                Projet1.erreurs.add("La catégorie " + categorieActivite + " n'est pas reconnue.");
         }
-        return "n'a pas ete complete entre le 1er Avril 2012 et le 1er Avril 2014.";   
+
     }
 
-    
+    static String erreurCompletionActivite(String cycle) {
+        if (cycle.equals("2008-2010")) {
+            return "n'a pas ete complete entre le 1er Avril 2008 et le 1er Juillet 2010.";
+        } else if (cycle.equals("2010-2012")) {
+            return " n'a pas ete completee entre le 1er Avril 2010 et le 1er Avril 2012.";
+        }
+        return "n'a pas ete complete entre le 1er Avril 2012 et le 1er Avril 2014.";
+    }
+
     static int transfertHeuresCyclePrecedent(Integer nbreHeures) {
         Integer nbreHeuresATransferer = nbreHeures;
         if (nbreHeures < 0) {
@@ -218,11 +221,9 @@ public class ValidationArchitectes {
                 + nbreHeuresProjetDeRecherche;
         if ((nbreTotalHeures) < nbreHeuresRequises) {
             Projet1.declarationValide = false;
-            Projet1.erreurs.add("Il manque " + (nbreHeuresRequises - nbreTotalHeures) + 
-                    " heure(s) de formation pour completer le cycle.");
+            Projet1.erreurs.add("Il manque " + (nbreHeuresRequises - nbreTotalHeures)
+                    + " heure(s) de formation pour completer le cycle.");
         }
 
     }
 }
-
-    

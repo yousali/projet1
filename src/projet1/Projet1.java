@@ -2,7 +2,10 @@ package projet1;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
@@ -65,6 +68,16 @@ public class Projet1 {
         erreurs.clear();
         erreurs.add("Le fichier d'entree est invalide.");
         declarationValide = false;
+    }
+    static boolean dateValide(String dateAVerifier){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");
+        sdf.setLenient(false);
+        try{
+            Date date =sdf.parse(dateAVerifier);
+        }catch(ParseException e){
+            return false;
+        }
+        return true;
     }
 
     static void erreurFormatDate() {

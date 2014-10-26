@@ -7,7 +7,7 @@
     {
       "description": "Cours sur la déontologie",
       "categorie": "cours",
-      "heures": 14,
+      "heures": 14.5,
       "date": "2013-03-20"
     },
     {
@@ -19,7 +19,7 @@
     {
       "description": "Rédaction pour le magazine Architecture moderne",
       "categorie": "rédaction professionnelle",
-      "heures": -6,
+      "heures": 6,
       "date": "2012-10-22"
     },
     {
