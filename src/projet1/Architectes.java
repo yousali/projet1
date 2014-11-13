@@ -14,7 +14,7 @@ import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
 import static sun.util.calendar.CalendarUtils.mod;
 
-public class ValidationArchitectes {
+public class Architectes {
 
     //-------------------------
     static ArrayList<String> activitesTraitees = new ArrayList<>();
@@ -28,78 +28,77 @@ public class ValidationArchitectes {
 
     //---------------------------------
     static void traiter(JSONObject contenu) {
-
+        Integer sexe = contenu.getInt("sexe");
+        if(!Projet1.sexeValide(sexe)){
+            Projet1.erreurSexe();
+            return;
+            
+        }
         String noPermis = contenu.getString("numero_de_permis");
-        if (Projet1.noPermisValide(noPermis)) {
-            String cycle = contenu.getString("cycle").trim();
-            if (cycleValide(cycle)) {
-                nbreHeuresRequises = heuresMinimalesFormation(cycle);
-                nbreHeuresCyclePrecedent = transfertHeuresCyclePrecedent(contenu.getInt("heures_transferees_du_cycle_precedent"));
-                JSONArray activitesFaites = (JSONArray) contenu.getJSONArray("activites");
-                for (int i = 0; i < activitesFaites.size(); i++) {
-                    JSONObject activiteSuivie = activitesFaites.getJSONObject(i);
-                    String descriptionActivite = activiteSuivie.getString("description").trim().toLowerCase();
-                    if (Projet1.descriptionActiviteValide(descriptionActivite)) {
-                        String dateActivite = activiteSuivie.getString("date").trim();
-                        if (Projet1.dateValide(dateActivite)) {
-                            try {
-                                Date date = new SimpleDateFormat("yyyy-MM-dd").parse(dateActivite);
-                                if (!activiteSuivieDurantLeCycle(date, cycle)) {
-                                    Projet1.erreurs.add("L'activité " + descriptionActivite
-                                            + erreurCompletionActivite(cycle));
-                                } else {
-                                    String categorieActivite = activiteSuivie.getString("categorie").trim().toLowerCase();
-                                    String activite = categorieActivite + " " + descriptionActivite + " " + dateActivite;
-                                    if (activitesTraitees.indexOf(activite) == -1) {
-                                        activitesTraitees.add(activite);
-                                        int nbreHeuresActivite = activiteSuivie.getInt("heures");
-                                        if (nbreHeuresActivite > 0) {
-                                            ajoutActivite(categorieActivite, nbreHeuresActivite);
-                                        } else {
-                                            Projet1.erreurInteger();
-                                            return;
-                                        }
-
-                                    }
-
-                                }
-
-                            } catch (ParseException e) {
-                                Projet1.erreurFormatDate();
-                                break;
-                            } catch (JSONException e) {
-
-                                Projet1.erreurInteger();
-                                break;
-                            } catch (NumberFormatException e) {
-
-                                Projet1.erreurInteger();
-                                return;
-                            }
+        if (!(noPermisArchitectesValide(noPermis))) {
+            Projet1.erreurDePermis();
+            return;
+        }
+        String cycle = contenu.getString("cycle").trim();
+        if (!cycleValide(cycle)) {
+            Projet1.erreurDeCycle();
+            return;
+        }
+        nbreHeuresRequises = heuresMinimalesFormation(cycle);
+        nbreHeuresCyclePrecedent = transfertHeuresCyclePrecedent(contenu.getInt("heures_transferees_du_cycle_precedent"));
+        JSONArray activitesFaites = (JSONArray) contenu.getJSONArray("activites");
+        for (int i = 0; i < activitesFaites.size(); i++) {
+            JSONObject activiteSuivie = activitesFaites.getJSONObject(i);
+            String descriptionActivite = activiteSuivie.getString("description").trim().toLowerCase();
+            if (Projet1.descriptionActiviteValide(descriptionActivite)) {
+                String dateActivite = activiteSuivie.getString("date").trim();
+                if (Projet1.dateValide(dateActivite)) {
+                    try {
+                        Date date = new SimpleDateFormat("yyyy-MM-dd").parse(dateActivite);
+                        if (!activiteSuivieDurantLeCycle(date, cycle)) {
+                            Projet1.erreurs.add("L'activité " + descriptionActivite
+                                    + erreurCompletionActivite(cycle));
                         } else {
-
-                            Projet1.erreurFormatDate();
-                            return;
+                            String categorieActivite = activiteSuivie.getString("categorie").trim().toLowerCase();
+                            String activite = categorieActivite + " " + descriptionActivite + " " + dateActivite;
+                            if (activitesTraitees.indexOf(activite) == -1) {
+                                activitesTraitees.add(activite);
+                                int nbreHeuresActivite = activiteSuivie.getInt("heures");
+                                if (nbreHeuresActivite > 0) {
+                                    ajoutActivite(categorieActivite, nbreHeuresActivite);
+                                } else {
+                                    Projet1.erreurInteger();
+                                    return;
+                                }
+                            }
                         }
+                    } catch (ParseException e) {
+                        Projet1.erreurFormatDate();
+                        break;
+                    } catch (JSONException e) {
 
-                    } else {
+                        Projet1.erreurInteger();
+                        break;
+                    } catch (NumberFormatException e) {
 
-                        Projet1.erreurDescriptionActivite();
-
+                        Projet1.erreurInteger();
+                        return;
                     }
+                } else {
+
+                    Projet1.erreurFormatDate();
+                    return;
                 }
 
-                calculDesHeures();
-                //***A effacer lesdeux lignes qui suivent 
-                System.out.println(Projet1.declarationValide);
-                System.out.println(Projet1.erreurs);
-
             } else {
-                erreurDeCycle();
+                Projet1.erreurDescriptionActivite();
             }
-        } else {
-            erreurDePermis();
         }
+
+        calculDesHeures();
+        //***A effacer lesdeux lignes qui suivent 
+        System.out.println(Projet1.declarationValide);
+        System.out.println(Projet1.erreurs);
 
     }
 
@@ -152,11 +151,7 @@ public class ValidationArchitectes {
         return nbreHeuresATransferer;
     }
 
-    static void erreurDePermis() {
-        System.out.println("Erreur, le numero de permis est invalide");
-        Projet1.declarationValide = false;
-        Projet1.erreurs.add("Le fichier d'entree est invalide.");
-    }
+    
 
     static Integer heuresMinimalesFormation(String cycle) {
         if (cycle.equals("2012-2014")) {
@@ -185,12 +180,11 @@ public class ValidationArchitectes {
         }
 
     }
-
-    static void erreurDeCycle() {
-        System.out.println("Erreur du cycle");
-        Projet1.erreurs.add("Le cycle entre n'est pas supporte.");
-        Projet1.declarationValide = false;
+    static boolean noPermisArchitectesValide(String noPermis) {
+        return noPermis.matches("[AT][0-9]{4}");
     }
+
+    
 
     static boolean cycleValide(String cycle) {
 

@@ -1,8 +1,11 @@
 {
   "numero_de_permis": "A0001",
+  "nom": "Yousfi",
+  "prenom":"Ali",
+  "sexe": 1,
   "cycle": "2012-2014",
   "heures_transferees_du_cycle_precedent": 2,
-  "ordre":"architectes",
+  "ordre":"psychologues",
   "activites": [
     {
       "description": "Cours sur la déontologie",

@@ -24,7 +24,7 @@ public class Projet1 {
 
     }
 
-    static void traiterFichierEntree(String fichier) {
+    static void traiterFichierEntree(String fichier) throws ParseException {
         try {
             JSONObject contenu = (JSONObject) JSONSerializer.toJSON(fichier);
 
@@ -32,14 +32,17 @@ public class Projet1 {
             switch (ordre) {
 
                 case "architectes":
-                    ValidationArchitectes.traiter(contenu);
+                    Architectes.traiter(contenu);
                     break;
                 case "geologues":
-                    ValidationGeologues.traiter();
+                    Geologues.traiter(contenu);
                     break;
                 case "psychologues":
 
-                    ValidationPsychologues.traiter();
+                    Psychologues.traiter(contenu);
+                    break;
+                case "podiatres":
+                    Podiatres.traiter(contenu);
                     break;
                 default:
                     System.out.println("L'ordre n'est pas supporte");
@@ -53,9 +56,26 @@ public class Projet1 {
 
         }
     }
+    static void erreurDeCycle() {
+        System.out.println("Erreur du cycle");
+        Projet1.erreurs.add("Le cycle entre n'est pas supporte.");
+        Projet1.declarationValide = false;
+    }
 
-    static boolean noPermisValide(String noPermis) {
-        return noPermis.matches("[ARSZ][0-9]{4}");
+    static boolean sexeValide(Integer sexe){
+        return (sexe == 0 || sexe == 1 || sexe ==2);
+    }
+    
+    static void erreurSexe(){
+        
+        System.out.println("Erreur, le sexe entré n'est pas valide.");
+        Projet1.declarationValide = false;
+        Projet1.erreurs.add("Erreur dans le fichier entré. Le sexe est invalide.");
+    }
+    static void erreurDePermis() {
+        System.out.println("Erreur, le numero de permis est invalide");
+        Projet1.declarationValide = false;
+        Projet1.erreurs.add("Le fichier d'entree est invalide.");
     }
 
     static boolean descriptionActiviteValide(String description) {
@@ -98,7 +118,7 @@ public class Projet1 {
     static void erreurDansFichierJSON() {
         System.out.println("Erreur! Le fichier d'entree est invalide.");
         erreurs.clear();
-        erreurs.add("Le fichier d'entree est invalide.");
+        erreurs.add("ALe fichier d'entree est invalide.");
         declarationValide = false;
 
     }
