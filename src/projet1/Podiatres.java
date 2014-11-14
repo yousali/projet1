@@ -28,17 +28,17 @@ public class Podiatres {
         Integer sexe = contenu.getInt("sexe");
         if(!Projet1.sexeValide(sexe)){
             Projet1.erreurSexe();
-            return;
-            
+            return;   
         }
-        String noPermis = contenu.getString("numero_de_permis");
-        if (!(noPermisPodiatresValide(noPermis))) {
+        String noPermis = contenu.getString("numero_de_permis").trim();
+        if (!(noPermisPodiatresValide(noPermis))) {    
             Projet1.erreurDePermis();
             return;
         }
         String cycle = contenu.getString("cycle").trim();
         if (!cycleValide(cycle)) {
-            erreurDeCycle();
+           
+            Projet1.erreurDeCycle();
             return;
         }
         
