@@ -5,28 +5,33 @@
  */
 package projet1;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+
 /**
  *
  * @author Moes
  */
 public class Statistiques {
 
-    private static Integer nbreDeclarationsTraitees;
-    private static Integer nbreDeclarationsCompletes;
-    private static Integer nbreDeclarationsIncompletes;
-    private static Integer nbreDeclarationsHommes;
-    private static Integer nbreDeclarationsFemmes;
-    private static Integer nbreDeclarationsGensInconnu;
-    private static Integer nbreActivitesDansCours;
-    private static Integer nbreActivitesDansAtelier;
-    private static Integer nbreActivitesDansSeminaire;
-    private static Integer nbreActivitesDansColloque;
-    private static Integer nbreActivitesDansConference;
-    private static Integer nbreActivitesDansLectureDirigee;
-    private static Integer nbreActivitesDansPresentation;
-    private static Integer nbreActivitesDansGDiscussion;
-    private static Integer nbreActivitesDansPRecherche;
-    private static Integer nbreActivitesDansRProfessionnelle;
+    private static Integer nbreDeclarationsTraitees = 0;
+    private static Integer nbreDeclarationsCompletes = 0;
+    private static Integer nbreDeclarationsIncompletes = 0;
+    private static Integer nbreDeclarationsHommes = 0;
+    private static Integer nbreDeclarationsFemmes = 0;
+    private static Integer nbreDeclarationsGensInconnu = 0;
+    private static Integer nbreActivitesDansCours = 0;
+    private static Integer nbreActivitesDansAtelier = 0;
+    private static Integer nbreActivitesDansSeminaire = 0;
+    private static Integer nbreActivitesDansColloque = 0;
+    private static Integer nbreActivitesDansConference = 0;
+    private static Integer nbreActivitesDansLectureDirigee = 0;
+    private static Integer nbreActivitesDansPresentation = 0;
+    private static Integer nbreActivitesDansGDiscussion = 0;
+    private static Integer nbreActivitesDansPRecherche = 0;
+    private static Integer nbreActivitesDansRProfessionnelle = 0;
 
     public void setDeclarationsTraitees() {
         nbreDeclarationsTraitees++;
@@ -91,7 +96,7 @@ public class Statistiques {
     public void setActivitesDansRProfessionnelle() {
         nbreActivitesDansRProfessionnelle++;
     }
-  //
+    //
 
     public int getDeclarationsTraitees() {
         return nbreDeclarationsTraitees;
@@ -176,10 +181,27 @@ public class Statistiques {
         nbreActivitesDansRProfessionnelle = 0;
 
     }
-    
-    public void enregistrerStats(){
-        
-        
-    }
 
+    public static void enregistrerStats() throws IOException {
+        PrintWriter stats;
+        stats = new PrintWriter(new BufferedWriter(new FileWriter("fichiers/stats")));
+        stats.println("Nombre total de déclarations traitées: " + nbreDeclarationsTraitees);
+        stats.println("Nombre total de déclarations complètes: " + nbreDeclarationsCompletes);
+        stats.println("Nombre total de déclarations incomplètes ou invalides: " + nbreDeclarationsIncompletes);
+        stats.println("Nombre total de déclarations faites par des hommes" + nbreDeclarationsHommes);
+        stats.println(" Nombre total de déclarations faites par des femmes:" + nbreDeclarationsFemmes);
+        stats.println(" Nombre total de déclarations faites par des gens de sexe inconnu:" + nbreDeclarationsGensInconnu);
+        stats.println("Nombre total d'activités valides dans les déclarations: ");
+        stats.println("Nombre d'activités valides dans la catégorie COURS :" + nbreActivitesDansCours);
+        stats.println("Nombre d'activités valides dans la catégorie ATELIER: " + nbreActivitesDansAtelier);
+        stats.println("Nombre d'activités valides dans la catégorie SEMINAIRE: " + nbreActivitesDansSeminaire);
+        stats.println("Nombre d'activités valides dans la catégorie COLLOQUE: " + nbreActivitesDansColloque);
+        stats.println("Nombre d'activités valides dans la catégorie CONFERENCE: " + nbreActivitesDansConference);
+        stats.println("Nombre d'activités valides dans la catégorie LECTURE DIRIGEE: " + nbreActivitesDansLectureDirigee);
+        stats.println("Nombre d'activités valides dans la catégorie PRESENTATION: " + nbreActivitesDansPresentation);
+        stats.println("Nombre d'activités valides dans la catégorie GROUPE DE DISCUSSION: " + nbreActivitesDansGDiscussion);
+        stats.println("Nombre d'activités valides dans la catégorie PROJET DE RECHERCHE: " + nbreActivitesDansPRecherche);
+        stats.println("Nombre d'activités valides dans la catégorie REDACTION PROFESSIONNELLE: " + nbreActivitesDansRProfessionnelle);
+        stats.close();
+    }
 }

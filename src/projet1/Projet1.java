@@ -17,7 +17,7 @@ public class Projet1 {
     static ArrayList<String> erreurs = new ArrayList<>();
 
     public static void main(String[] args) throws Exception {
-
+        Statistiques.enregistrerStats();
         String fichier = FileReader.loadFileIntoString(args[0], null);
         traiterFichierEntree(fichier);
         ecrireFichierSortie(args[1]);
