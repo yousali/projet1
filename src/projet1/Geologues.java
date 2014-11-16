@@ -34,7 +34,6 @@ public class Geologues {
         String nom = contenu.getString("nom").trim().toUpperCase();
         String prenom = contenu.getString("prenom").trim().toUpperCase();
         String noPermis = contenu.getString("numero_de_permis").trim();
-        System.out.println(nom.charAt(0));
         return noPermis.matches(nom.charAt(0) + "" + prenom.charAt(0) + "[0-9]{4}");
     }
 

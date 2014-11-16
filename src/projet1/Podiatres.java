@@ -37,7 +37,6 @@ public class Podiatres {
         }
         String cycle = contenu.getString("cycle").trim();
         if (!cycleValide(cycle)) {
-           
             Projet1.erreurDeCycle();
             return;
         }
