@@ -18,12 +18,7 @@ public class Projet1 {
 
     public static void main(String[] args) throws Exception {
         String fichier = FileReader.loadFileIntoString(args[0], null);
-        Statistiques.chargerStats();
-        Statistiques.setDeclarationsTraitees();
-        System.out.println(Statistiques.getDeclarationsTraitees());
-        Statistiques.enregistrerStats();
         traiterFichierEntree(fichier);
-        
         ecrireFichierSortie(args[1]);
 
     }
