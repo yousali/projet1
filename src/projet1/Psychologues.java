@@ -15,7 +15,7 @@ public class Psychologues {
         Integer nbreHeuresConference = 0;
         Integer heure = 0;
         Integer heureTotale = 0;
-        
+
         if (!validerCyclePsychologues(contenu)) {
             Projet1.declarationValide = false;
             Projet1.erreurs.add("Le cycle entré n'est pas supporte");
@@ -33,14 +33,12 @@ public class Psychologues {
             return;
         }
 
-        
-
         JSONArray activitesFaites = contenu.getJSONArray("activites");
 
         for (int i = 0; i < activitesFaites.size(); i++) {
             JSONObject activiteSuivie = activitesFaites.getJSONObject(i);
             String categ = activiteSuivie.getString("categorie");
-           // String description = activiteSuivie.getString("description");
+            // String description = activiteSuivie.getString("description");
             heure = activiteSuivie.getInt("heures");
             //heure = validationHeure(heure);
 
@@ -62,15 +60,19 @@ public class Psychologues {
             }
 
             if (ValidationCategorie(categ) && validationDate(date)) {
+                
+                calculerCategorie(categ);
 
                 if (categ.equals("conférence")) {
 
+                    Statistiques.nbreActivitesDansConference++;
                     nbreHeuresConference += heure;
 
                 } else {
                     // les heures totales son incremente si ce nest pas une conference. 
                     // on ne risque pas de les faire changer.
                     if (categ.equals("cours")) {
+                        Statistiques.nbreActivitesDansCours++;
                         nbreHeuresCours += heure;
                     }
 
@@ -83,6 +85,7 @@ public class Psychologues {
 
         if (nbreHeuresCours < 25) {
             Projet1.erreurs.add("Il y a moins de 25 heures de cours");
+
         }
 
         if (nbreHeuresConference > 15) {
@@ -96,26 +99,24 @@ public class Psychologues {
             Projet1.erreurs.add("Il manque " + (90 - nbreTotalHeures) + " heure(s) de formation pour completer le cycle.");
 
         }
+        if (nbreTotalHeures < 90 || nbreHeuresConference > 15 || nbreHeuresCours < 25) {
+            Projet1.declarationValide = false;
+            Statistiques.nbreDeclarationsIncompletes++;
+        }
 
     }
 
     static boolean validerCyclePsychologues(JSONObject contenu) {
 
         String cycle = contenu.getString("cycle").trim();
-        if (cycle.equals("2010-2015")) {
-            return true;
-        }
-        return false;
+        return cycle.equals("2010-2015");
     }
 
     static boolean validationDate(Date date) throws ParseException {
         Date date1 = new SimpleDateFormat("yyyy-MM-dd").parse("2010-01-01");
         Date date2 = new SimpleDateFormat("yyyy-MM-dd").parse("2015-01-01");
 
-        if (date.compareTo(date1) >= 0 && date.compareTo(date2) <= 0) {
-            return true;
-        }
-        return false;
+        return date.compareTo(date1) >= 0 && date.compareTo(date2) <= 0;
     }
 
     static boolean ValidationCategorie(String Categorie) {
@@ -130,10 +131,7 @@ public class Psychologues {
         categ.add("groupe de discussion");
         categ.add("projet de recherche");
         categ.add("rédaction professionnelle");
-        if (categ.contains(Categorie)) {
-            return true;
-        }
-        return false;
+        return categ.contains(Categorie);
     }
 
     static boolean validerCyclePsychologues(String cycle) {
@@ -144,5 +142,43 @@ public class Psychologues {
     static boolean noPermisPsychologuesValide(String noPermis) {
 
         return noPermis.matches("[0-9]{5}-[0-9]{2}");
+    }
+    
+    static void calculerCategorie(String categorie){
+        
+        switch (categorie){
+            
+            case "cours":
+                Statistiques.nbreActivitesDansCours++;
+                break;
+            case "atelier":
+                Statistiques.nbreActivitesDansAtelier++;
+                break;
+            case "séminaire":
+                Statistiques.nbreActivitesDansSeminaire++;
+                break;
+            case "colloque":
+                Statistiques.nbreActivitesDansColloque++;
+                break;
+            case "conférence":
+                Statistiques.nbreActivitesDansConference++;
+                break;
+            case "lecture dirigée":
+                Statistiques.nbreActivitesDansLectureDirigee++;
+                break;
+            case "présentation":
+                Statistiques.nbreActivitesDansPresentation++;
+                break;
+            case "groupe de discussion":
+                Statistiques.nbreActivitesDansGDiscussion++;
+                break;
+            case "projet de recherche":
+                Statistiques.nbreActivitesDansPRecherche++;
+                break;
+            case "rédaction professionnelle":
+                Statistiques.nbreActivitesDansRProfessionnelle++;
+                break;   
+                
+        }
     }
 }

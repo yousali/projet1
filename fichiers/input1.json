@@ -1,5 +1,5 @@
 {
-  "numero_de_permis": "10001",
+  "numero_de_permis": "10001-32",
   "nom": "Yousfi",
   "prenom":"Ali",
   "sexe": 1,
@@ -10,13 +10,13 @@
     {
       "description": "Cours sur la déontologie",
       "categorie": "cours",
-      "heures": 24,
+      "heures": 26,
       "date": "2013-10-20"
     },
     {
       "description": "Séminaire sur l'architecture contemporaine",
       "categorie": "séminaire",
-      "heures": 10,
+      "heures": 16,
       "date": "2014-01-07"
     },
     {
@@ -34,14 +34,14 @@
     {
       "description": "Présentation de la profession d'architecte au Cégep de Limoilou",
       "categorie": "présentation",
-      "heures": 2,
-      "date": "2015-12-15"
+      "heures": 22,
+      "date": "2014-01-15"
     },
 	{
       "description": "Présentation de la profession d'architecte au Cégep de Limoilou",
       "categorie": "projet de recherche",
       "heures": 15,
-      "date": "2015-12-15"
+      "date": "2014-12-15"
     }
 	
   ]
