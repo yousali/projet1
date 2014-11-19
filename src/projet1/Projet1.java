@@ -78,20 +78,7 @@ public class Projet1 {
     static boolean sexeValide(Integer sexe) {
         return (sexe == 0 || sexe == 1 || sexe == 2);
     }
-
-    static void calculerSexe(int sexe) {
-
-        if (sexe == 0) {
-            Statistiques.nbreDeclarationsGensInconnu++;
-        } else if (sexe == 1) {
-               Statistiques.nbreDeclarationsHommes++;
-        } else {
-            Statistiques.nbreDeclarationsFemmes++;
-        }
-    }
-
     static void erreurSexe() {
-
         System.out.println("Erreur, le sexe entré n'est pas valide.");
         Projet1.declarationValide = false;
         Projet1.erreurs.add("Erreur dans le fichier entré. Le sexe est invalide.");

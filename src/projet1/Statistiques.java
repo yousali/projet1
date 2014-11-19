@@ -224,5 +224,15 @@ public class Statistiques {
             System.out.println("Erreur d'ecriture dans le fichier des statistiques");
         }
     }
+    static void calculerSexe(int sexe) {
+
+        if (sexe == 0) {
+            Statistiques.nbreDeclarationsGensInconnu++;
+        } else if (sexe == 1) {
+               Statistiques.nbreDeclarationsHommes++;
+        } else {
+            Statistiques.nbreDeclarationsFemmes++;
+        }
+    }
 
 }

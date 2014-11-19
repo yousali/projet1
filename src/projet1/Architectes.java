@@ -12,7 +12,6 @@ import java.util.Date;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
-import static sun.util.calendar.CalendarUtils.mod;
 
 public class Architectes {
 
@@ -33,7 +32,7 @@ public class Architectes {
             Projet1.erreurSexe();
             return;  
         }
-        Projet1.calculerSexe(sexe);
+        Statistiques.calculerSexe(sexe);
         String noPermis = contenu.getString("numero_de_permis");
         if (!(noPermisArchitectesValide(noPermis))) {
             Projet1.erreurDePermis();
