@@ -31,9 +31,9 @@ public class Architectes {
         Integer sexe = contenu.getInt("sexe");
         if(!Projet1.sexeValide(sexe)){
             Projet1.erreurSexe();
-            return;
-            
+            return;  
         }
+        Projet1.calculerSexe(sexe);
         String noPermis = contenu.getString("numero_de_permis");
         if (!(noPermisArchitectesValide(noPermis))) {
             Projet1.erreurDePermis();
@@ -96,32 +96,48 @@ public class Architectes {
         }
 
         calculDesHeures();
-        //***A effacer lesdeux lignes qui suivent 
-        System.out.println(Projet1.declarationValide);
-        System.out.println(Projet1.erreurs);
-
     }
 
     static void ajoutActivite(String categorieActivite, Integer nbreHeuresActivite) {
         switch (categorieActivite) {
             case "cours":
+                Statistiques.nbreActivitesDansCours++;
+                nbreHeuresCours = nbreHeuresCours + nbreHeuresActivite;
+                break;
             case "atelier":
+                Statistiques.nbreActivitesDansAtelier++;
+                nbreHeuresCours = nbreHeuresCours + nbreHeuresActivite;
+                break;
             case "séminaire":
+                Statistiques.nbreActivitesDansSeminaire++;
+                nbreHeuresCours = nbreHeuresCours + nbreHeuresActivite;
+                break;
             case "colloque":
+                Statistiques.nbreActivitesDansColloque++;
+                nbreHeuresCours = nbreHeuresCours + nbreHeuresActivite;
+                break;
             case "conférence":
+                Statistiques.nbreActivitesDansConference++;
+                nbreHeuresCours = nbreHeuresCours + nbreHeuresActivite;
+                break;
             case "lecture dirigée":
+                Statistiques.nbreActivitesDansLectureDirigee++;
                 nbreHeuresCours = nbreHeuresCours + nbreHeuresActivite;
                 break;
             case "présentation":
+                Statistiques.nbreActivitesDansPresentation++;
                 nbreHeuresPresentation = nbreHeuresPresentation + nbreHeuresActivite;
                 break;
             case "groupe de discussion":
+                Statistiques.nbreActivitesDansGDiscussion++;
                 nbreHeuresGroupeDeDiscussion = nbreHeuresGroupeDeDiscussion + nbreHeuresActivite;
                 break;
             case "projet de recherche":
+                Statistiques.nbreActivitesDansPRecherche++;
                 nbreHeuresProjetDeRecherche = nbreHeuresProjetDeRecherche + nbreHeuresActivite;
                 break;
             case "rédaction professionnelle":
+                Statistiques.nbreActivitesDansRProfessionnelle++;
                 nbreHeuresRedaction = nbreHeuresRedaction + nbreHeuresActivite;
                 break;
             default:
@@ -194,6 +210,7 @@ public class Architectes {
     static void calculDesHeures() {
         if ((nbreHeuresCours + nbreHeuresCyclePrecedent) < 17) {
             Projet1.declarationValide = false;
+            Statistiques.nbreDeclarationsIncompletes++;
             Projet1.erreurs.add("Le minimum de 17 heures n'a pas été atteint dans "
                     + "les catégories cours,atelier,séminaire,colloque ,conférence et lecture dirigée.");
         }
@@ -215,6 +232,7 @@ public class Architectes {
                 + nbreHeuresProjetDeRecherche;
         if ((nbreTotalHeures) < nbreHeuresRequises) {
             Projet1.declarationValide = false;
+            Statistiques.nbreDeclarationsIncompletes++;
             Projet1.erreurs.add("Il manque " + (nbreHeuresRequises - nbreTotalHeures)
                     + " heure(s) de formation pour completer le cycle.");
         }

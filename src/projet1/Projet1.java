@@ -17,21 +17,20 @@ public class Projet1 {
     static ArrayList<String> erreurs = new ArrayList<>();
 
     public static void main(String[] args) throws Exception {
-        
-        if(args.length == 1 && args[0].matches("-S")){
-            
-            Statistiques.calculer();  
-        }else if(args.length == 1 && args[0].matches("-SR")){
-            
+
+        if (args.length == 1 && args[0].matches("-S")) {
+            Statistiques.calculer();
+        } else if (args.length == 1 && args[0].matches("-SR")) {
             Statistiques.reinitialiser();
-            
-        }else if(args.length == 2){
-             String fichier = FileReader.loadFileIntoString(args[0], null);
-             traiterFichierEntree(fichier);
-             traiterFichierEntree(fichier);
-             ecrireFichierSortie(args[1]);
-        }else{
-            
+        } else if (args.length == 2) {
+            String fichier = FileReader.loadFileIntoString(args[0], null);
+            Statistiques.chargerStats();
+            Statistiques.nbreDeclarationsTraitees++;
+            traiterFichierEntree(fichier);
+            Statistiques.enregistrerStats();
+            ecrireFichierSortie(args[1]);
+        } else {
+
             throw new IllegalArgumentException("Le programme accepte un argument pour le calcul des statistiques  et deux pour la validation d<activites de formation continue");
         }
     }
@@ -68,26 +67,43 @@ public class Projet1 {
 
         }
     }
+
     static void erreurDeCycle() {
         System.out.println("Erreur du cycle");
         Projet1.erreurs.add("Le cycle entre n'est pas supporte.");
         Projet1.declarationValide = false;
+        Statistiques.nbreDeclarationsIncompletes++;
     }
 
-    static boolean sexeValide(Integer sexe){
-        return (sexe == 0 || sexe == 1 || sexe ==2);
+    static boolean sexeValide(Integer sexe) {
+        return (sexe == 0 || sexe == 1 || sexe == 2);
     }
-    
-    static void erreurSexe(){
-        
+
+    static void calculerSexe(int sexe) {
+
+        if (sexe == 0) {
+            Statistiques.nbreDeclarationsGensInconnu++;
+        } else if (sexe == 1) {
+               Statistiques.nbreDeclarationsHommes++;
+        } else {
+            Statistiques.nbreDeclarationsFemmes++;
+        }
+    }
+
+    static void erreurSexe() {
+
         System.out.println("Erreur, le sexe entré n'est pas valide.");
         Projet1.declarationValide = false;
         Projet1.erreurs.add("Erreur dans le fichier entré. Le sexe est invalide.");
+        Statistiques.nbreDeclarationsIncompletes++;
+        
     }
+
     static void erreurDePermis() {
         System.out.println("Erreur, le numero de permis est invalide");
         Projet1.declarationValide = false;
         Projet1.erreurs.add("Le fichier d'entree est invalide.");
+        Statistiques.nbreDeclarationsIncompletes++;
     }
 
     static boolean descriptionActiviteValide(String description) {
@@ -100,13 +116,15 @@ public class Projet1 {
         erreurs.clear();
         erreurs.add("Le fichier d'entree est invalide.");
         declarationValide = false;
+        Statistiques.nbreDeclarationsIncompletes++;
     }
-    static boolean dateValide(String dateAVerifier){
+
+    static boolean dateValide(String dateAVerifier) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");
         sdf.setLenient(false);
-        try{
-            Date date =sdf.parse(dateAVerifier);
-        }catch(ParseException e){
+        try {
+            Date date = sdf.parse(dateAVerifier);
+        } catch (ParseException e) {
             return false;
         }
         return true;
@@ -117,21 +135,23 @@ public class Projet1 {
         erreurs.clear();
         erreurs.add("Le fichier d'entree est invalide.");
         declarationValide = false;
+        Statistiques.nbreDeclarationsIncompletes++;
     }
 
     static void erreurInteger() {
         System.out.println("Erreur! Les heures d'activité devraient etre des entiers positifs");
         erreurs.clear();
         erreurs.add("Erreur! Les heures d'activité devraient etre des entiers positifs");
-
         declarationValide = false;
+        Statistiques.nbreDeclarationsIncompletes++;
     }
 
     static void erreurDansFichierJSON() {
         System.out.println("Erreur! Le fichier d'entree est invalide.");
         erreurs.clear();
-        erreurs.add("ALe fichier d'entree est invalide.");
+        erreurs.add("Le fichier d'entree est invalide.");
         declarationValide = false;
+        Statistiques.nbreDeclarationsIncompletes++;
 
     }
 
