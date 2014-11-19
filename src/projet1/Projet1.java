@@ -17,10 +17,23 @@ public class Projet1 {
     static ArrayList<String> erreurs = new ArrayList<>();
 
     public static void main(String[] args) throws Exception {
-        String fichier = FileReader.loadFileIntoString(args[0], null);
-        traiterFichierEntree(fichier);
-        ecrireFichierSortie(args[1]);
-
+        
+        if(args.length == 1 && args[0].matches("-S")){
+            
+            Statistiques.calculer();  
+        }else if(args.length == 1 && args[0].matches("-SR")){
+            
+            Statistiques.reinitialiser();
+            
+        }else if(args.length == 2){
+             String fichier = FileReader.loadFileIntoString(args[0], null);
+             traiterFichierEntree(fichier);
+             traiterFichierEntree(fichier);
+             ecrireFichierSortie(args[1]);
+        }else{
+            
+            throw new IllegalArgumentException("Le programme accepte un argument pour le calcul des statistiques  et deux pour la validation d<activites de formation continue");
+        }
     }
 
     static void traiterFichierEntree(String fichier) throws ParseException {

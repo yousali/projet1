@@ -6,9 +6,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import static projet1.Projet1.descriptionActiviteValide;
-import static projet1.Projet1.erreurs;
-
 public class Geologues {
 
     static void traiter(JSONObject contenu) {
